@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <a href="{% url 'tracker_home' %}" class="btn btn-outline-light border-0"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1 class="fw-bold mb-1">Cycle History & Analytics</h1>
+            <p class="text-secondary mb-0">Understand trends, variations, and physical wellness patterns.</p>
+        </div>
+    </div>
+
+    <!-- Analytics Board -->
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-3">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Total Cycles Logged</span>
+                <h2 class="fw-bold text-gradient m-0">{{ total_logs }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Average Cycle Duration</span>
+                <h2 class="fw-bold text-gradient m-0">{{ avg_cycle|default:28 }} Days</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Average Flow Duration</span>
+                <h2 class="fw-bold text-gradient m-0">{{ avg_period|default:5 }} Days</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Primary Symptom</span>
+                <h2 class="fw-bold text-gradient m-0 text-capitalize">
+                    {% if symptom_counts %}
+                        {{ symptom_counts.keys|slice:":1"|join:"" }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- History Logs -->
+        <div class="col-lg-8">
+            <div class="glass-card">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-history me-2"></i>Cycle Log Records</h5>
+                
+                {% if logs %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0" style="--bs-table-bg: transparent; --bs-table-border-color: var(--border-glass);">
+                            <thead>
+                                <tr class="text-secondary small">
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Period Length</th>
+                                    <th>Cycle Length</th>
+                                    <th>Flow Intensity</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                    <tr class="border-bottom" style="border-color: var(--border-glass) !important;">
+                                        <td class="text-white fw-medium">{{ log.start_date|date:"M d, Y" }}</td>
+                                        <td class="text-secondary">{{ log.end_date|date:"M d, Y"|default:"Ongoing" }}</td>
+                                        <td class="text-white">{{ log.period_length|default:"-" }} days</td>
+                                        <td class="text-secondary">{{ log.cycle_length|default:"-" }} days</td>
+                                        <td>
+                                            <span class="badge text-capitalize px-3 py-1 rounded-pill bg-opacity-10 
+                                                {% if log.flow_intensity == 'heavy' %}bg-danger text-danger{% elif log.flow_intensity == 'light' %}bg-info text-info{% else %}bg-warning text-warning{% endif %}"
+                                                style="background: rgba(255,255,255,0.03);">
+                                                {{ log.flow_intensity }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <form method="POST" action="{% url 'delete_cycle_log' log.pk %}" onsubmit="return confirm('Are you sure you want to delete this log?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="fas fa-trash-alt"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-secondary">No records logged in your history yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Symptoms Prevalence Charts -->
+        <div class="col-lg-4">
+            <div class="glass-card">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-virus-slash me-2"></i>Symptoms Prevalence</h5>
+                
+                {% if symptom_counts %}
+                    <div class="d-flex flex-column gap-3">
+                        {% for symptom, count in symptom_counts.items %}
+                            <div>
+                                <div class="d-flex justify-content-between text-secondary small mb-1">
+                                    <span class="text-capitalize">{{ symptom|replace:"_" }}</span>
+                                    <span class="text-white fw-bold">{{ count }} Logs</span>
+                                </div>
+                                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.05);">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {% widthratio count total_logs 100 %}%; background: var(--primary-grad);"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5 text-secondary small">
+                        No symptoms logged in your records.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

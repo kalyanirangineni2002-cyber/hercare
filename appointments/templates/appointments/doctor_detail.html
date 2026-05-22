@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Back Button -->
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <a href="{% url 'doctor_list' %}" class="btn btn-outline-light border-0"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1 class="fw-bold mb-1">Doctor Profile</h1>
+            <p class="text-secondary mb-0">Consult with Dr. {{ doctor.name }}</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Profile details -->
+        <div class="col-lg-5">
+            <div class="glass-card text-center mb-4">
+                <div class="doctor-img-container mx-auto mb-4" style="width: 180px; height: 180px; border-radius: 50%;">
+                    {% if doctor.profile_image %}
+                        <img src="{{ doctor.profile_image.url }}" class="doctor-img" alt="Dr. {{ doctor.name }}">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100 text-white font-weight-bold" style="font-size: 3rem; background: var(--accent-grad);">
+                            {{ doctor.name|slice:":1" }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h3 class="fw-bold mb-1">Dr. {{ doctor.name }}</h3>
+                <span class="badge bg-secondary text-capitalize rounded-pill px-3 py-2 mb-3" style="background: rgba(255,255,255,0.08);">
+                    {{ doctor.get_specialization_display }}
+                </span>
+                
+                <div class="d-flex justify-content-center gap-4 text-center my-3 border-top border-bottom py-3" style="border-color: var(--border-glass) !important;">
+                    <div>
+                        <span class="small text-secondary d-block">Rating</span>
+                        <strong class="text-white"><i class="fas fa-star text-warning me-1"></i> {{ doctor.rating }}</strong>
+                    </div>
+                    <div>
+                        <span class="small text-secondary d-block">Experience</span>
+                        <strong class="text-white">{{ doctor.experience_years }} Yrs</strong>
+                    </div>
+                    <div>
+                        <span class="small text-secondary d-block">Fee</span>
+                        <strong class="text-white">₹{{ doctor.consultation_fee }}</strong>
+                    </div>
+                </div>
+
+                <div class="text-start mt-4">
+                    <h6 class="text-secondary small mb-2"><i class="fas fa-graduation-cap me-2"></i>Qualifications</h6>
+                    <p class="small text-white mb-4">{{ doctor.qualification }}</p>
+                    
+                    <h6 class="text-secondary small mb-2"><i class="fas fa-clock me-2"></i>Availability Weekdays</h6>
+                    <p class="small text-white mb-0 text-capitalize">{{ doctor.available_days }}</p>
+                </div>
+            </div>
+
+            <!-- Doctor Bio Info -->
+            <div class="glass-card">
+                <h5 class="mb-3 text-gradient"><i class="fas fa-info-circle me-2"></i>About Dr. {{ doctor.name }}</h5>
+                <p class="small text-secondary mb-0" style="line-height: 1.6;">
+                    {{ doctor.bio }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Available Slots -->
+        <div class="col-lg-7">
+            <div class="glass-card">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-calendar-check me-2"></i>Available Appointment Slots</h5>
+                
+                {% if slots_by_date %}
+                    <div class="d-flex flex-column gap-4">
+                        {% for date_str, slots in slots_by_date.items %}
+                            <div>
+                                <h6 class="text-secondary small mb-3 border-bottom pb-2" style="border-color: var(--border-glass) !important;">
+                                    <i class="far fa-calendar-alt me-2"></i>{{ date_str }}
+                                </h6>
+                                <div class="row g-2">
+                                    {% for slot in slots %}
+                                        <div class="col-6 col-sm-4">
+                                            <a href="{% url 'book_appointment' slot.pk %}" 
+                                               class="btn btn-secondary-premium btn-sm w-100 py-3 text-center text-decoration-none">
+                                                <i class="far fa-clock me-1"></i> {{ slot.start_time|time:"h:i A" }}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="far fa-calendar-times fs-1 text-muted mb-3 d-block"></i>
+                        <p class="text-secondary">No active slots scheduled for booking. Please check back later.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

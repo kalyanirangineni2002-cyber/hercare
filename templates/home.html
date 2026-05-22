@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block guest_content %}
+<div class="container">
+    <!-- Hero Section -->
+    <section class="hero-section row align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0 text-center text-lg-start">
+            <span class="badge rounded-pill px-3 py-2 mb-3" style="background: rgba(232, 83, 109, 0.15); color: var(--primary-color); border: 1px solid rgba(232, 83, 109, 0.25);">
+                ✨ A Smart Health Initiative for Women
+            </span>
+            <h1 class="display-3 fw-bold mb-4" style="line-height: 1.1;">
+                Holistic Care For <br>
+                <span class="text-gradient">Every Stage</span> Of Your Life
+            </h1>
+            <p class="lead text-secondary mb-5" style="max-width: 550px;">
+                HER CARE+ provides support across reproductive, physical, and emotional health. Track your cycle, schedule doctor consultations, log daily moods, manage your medicine alerts, and securely store health reports.
+            </p>
+            <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                <a href="{% url 'register' %}" class="btn-premium px-4 py-3">
+                    Start Your Health Journey <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+                <a href="#features" class="btn-secondary-premium px-4 py-3">
+                    Explore Features
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 position-relative text-center d-none d-lg-block">
+            <!-- Premium Image Mockup or Gradient Glow Background -->
+            <div class="position-absolute top-50 start-50 translate-middle" style="width: 450px; height: 450px; background: radial-gradient(circle, rgba(232, 83, 109, 0.25) 0%, rgba(155, 127, 212, 0.25) 50%, transparent 70%); filter: blur(30px); z-index: -1;"></div>
+            
+            <div class="glass-card d-inline-block p-4 text-start shadow-lg position-relative" style="width: 400px; transform: rotate(-3deg);">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <span class="small text-secondary">🩸 Cycle Prediction</span>
+                    <span class="badge bg-danger rounded-pill">Predicted</span>
+                </div>
+                <h4 class="mb-2">Next Cycle Starts in 4 Days</h4>
+                <p class="small text-muted mb-0">Predicted date: May 26th - Flow: Medium</p>
+                <hr style="border-color: var(--border-glass);">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem;">S</div>
+                    <span class="small text-secondary">Daily wellness score: 85%</span>
+                </div>
+            </div>
+            
+            <div class="glass-card d-inline-block p-3 text-start shadow-lg position-absolute" style="width: 250px; top: 60%; left: 45%; transform: rotate(5deg);">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="btn-premium p-2 d-inline-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border-radius: 12px;">
+                        <i class="fas fa-capsules fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0">Medicine Taken</h6>
+                        <span class="small text-success"><i class="fas fa-check-circle me-1"></i> Multivitamins</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="row mb-5 py-5 text-center">
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="glass-card">
+                <h2 class="display-5 fw-bold text-gradient">24/7</h2>
+                <p class="text-secondary mb-0">Healthcare Assistance</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="glass-card">
+                <h2 class="display-5 fw-bold text-gradient">100%</h2>
+                <p class="text-secondary mb-0">Encrypted Reports Vault</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card">
+                <h2 class="display-5 fw-bold text-gradient">Holistic</h2>
+                <p class="text-secondary mb-0">Wellness & Counsel Support</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 mb-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Why HER CARE+?</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">
+                Women face distinct physiological, lifestyle, and clinical challenges that require specialized attention. We believe in eliminating barriers and simplifying access to medical resources.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card h-100 text-center">
+                    <div class="d-inline-flex p-3 rounded-4 mb-4" style="background: rgba(232, 83, 109, 0.15);">
+                        <i class="fas fa-info-circle text-danger fs-3" style="color: var(--primary-color) !important;"></i>
+                    </div>
+                    <h5>Raise Awareness</h5>
+                    <p class="small text-secondary mb-0">Minimize delayed diagnosis through preventive care schedules.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card h-100 text-center">
+                    <div class="d-inline-flex p-3 rounded-4 mb-4" style="background: rgba(155, 127, 212, 0.15);">
+                        <i class="fas fa-hands-helping text-primary fs-3" style="color: var(--accent-color) !important;"></i>
+                    </div>
+                    <h5>De-stigmatize</h5>
+                    <p class="small text-secondary mb-0">Safe space to address mental health, PCOS, fertility, and hormonal balance.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card h-100 text-center">
+                    <div class="d-inline-flex p-3 rounded-4 mb-4" style="background: rgba(46, 196, 182, 0.15);">
+                        <i class="fas fa-chart-line text-success fs-3" style="color: var(--teal-color) !important;"></i>
+                    </div>
+                    <h5>Combat Lifestyle Disorders</h5>
+                    <p class="small text-secondary mb-0">Harness specialized nutrition and fitness logs to address obesity/diabetes.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card h-100 text-center">
+                    <div class="d-inline-flex p-3 rounded-4 mb-4" style="background: rgba(255, 193, 7, 0.15);">
+                        <i class="fas fa-user-shield text-warning fs-3"></i>
+                    </div>
+                    <h5>Secure Encrypted Vault</h5>
+                    <p class="small text-secondary mb-0">Maintain reports, diagnosis data, and prescriptions with high privacy standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5 mb-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Comprehensive Wellness Suite</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">
+                Designed to cover all physical, clinical, and mental aspects of women's health.
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- 1. Menstrual Cycle Tracker -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-inline-flex p-3 rounded-4" style="background: rgba(232, 83, 109, 0.15);">
+                            <i class="fas fa-calendar-alt text-danger fs-3" style="color: var(--primary-color) !important;"></i>
+                        </div>
+                        <span class="badge bg-danger rounded-pill">Physical</span>
+                    </div>
+                    <h4>Menstrual Cycle Tracker</h4>
+                    <p class="text-secondary small">
+                        Log cycle starts, track symptoms, flow levels, and let the algorithm forecast upcoming cycles and fertility windows automatically.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 2. Online Doctor Appointments -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-inline-flex p-3 rounded-4" style="background: rgba(155, 127, 212, 0.15);">
+                            <i class="fas fa-user-md text-primary fs-3" style="color: var(--accent-color) !important;"></i>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Clinical</span>
+                    </div>
+                    <h4>Online Consultations</h4>
+                    <p class="text-secondary small">
+                        Schedule video consultations with specialized gynecologists, endocrinologists, and general practitioners based on live calendar availability.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. Mental Health Counseling -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-inline-flex p-3 rounded-4" style="background: rgba(46, 196, 182, 0.15);">
+                            <i class="fas fa-brain text-success fs-3" style="color: var(--teal-color) !important;"></i>
+                        </div>
+                        <span class="badge bg-success rounded-pill">Emotional</span>
+                    </div>
+                    <h4>Mental Well-being</h4>
+                    <p class="text-secondary small">
+                        Keep track of stress, log daily mood, analyze mental trends, and read specialized guides on self-care, meditation, and anxiety relief.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4. Nutrition & Fitness Tips -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-inline-flex p-3 rounded-4" style="background: rgba(255, 193, 7, 0.15);">
+                            <i class="fas fa-apple-alt text-warning fs-3"></i>
+                        </div>
+                        <span class="badge bg-warning rounded-pill">Lifestyle</span>
+                    </div>
+                    <h4>Nutrition & Fitness</h4>
+                    <p class="text-secondary small">
+                        Access diet recommendations tailored to PCOS/thyroid/pregnancy, complete specialized exercises, and receive a new health tip every single day.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 5. Medicine Reminder Alerts -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-inline-flex p-3 rounded-4" style="background: rgba(232, 83, 109, 0.15);">
+                            <i class="fas fa-capsules text-danger fs-3" style="color: var(--primary-color) !important;"></i>
+                        </div>
+                        <span class="badge bg-danger rounded-pill">Daily Schedule</span>
+                    </div>
+                    <h4>Medicine Reminders</h4>
+                    <p class="text-secondary small">
+                        Set up custom medications times (morning, afternoon, evening), track dosage counts, and mark them as taken with simple clicks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 6. Health Reports Storage -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-inline-flex p-3 rounded-4" style="background: rgba(155, 127, 212, 0.15);">
+                            <i class="fas fa-file-medical text-primary fs-3" style="color: var(--accent-color) !important;"></i>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Diagnostics</span>
+                    </div>
+                    <h4>Health Report Storage</h4>
+                    <p class="text-secondary small">
+                        A secure document hub to upload, filter, search, and download blood panels, scans, and doctor prescriptions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="glass-card text-center my-5 py-5" style="border-color: rgba(232, 83, 109, 0.25);">
+        <h2 class="display-6 fw-bold mb-3 text-gradient">Ready to take control of your health?</h2>
+        <p class="text-secondary mb-4 mx-auto" style="max-width: 500px;">
+            Join thousands of women who prioritize their physical, reproductive, and emotional well-being with HER CARE+.
+        </p>
+        <a href="{% url 'register' %}" class="btn-premium px-5 py-3">Create Free Account</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 border-top text-center text-muted" style="border-color: var(--border-glass) !important;">
+        <p class="small mb-0">&copy; 2026 HER CARE+. All Rights Reserved.</p>
+    </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 650px;">
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <a href="{% url 'mental_health_home' %}" class="btn btn-outline-light border-0"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1 class="fw-bold mb-1">{% if editing %}Edit Mood Log{% else %}Log Daily Mood{% endif %}</h1>
+            <p class="text-secondary mb-0">Record your current emotional state, stress levels, and daily habits.</p>
+        </div>
+    </div>
+
+    <div class="glass-card shadow-lg">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="form-label small text-secondary">Date</label>
+                {{ form.date }}
+                {% if form.date.errors %}
+                    <div class="text-danger small">{{ form.date.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Custom Emoji Mood Selector Grid -->
+            <div class="mb-4">
+                <label class="form-label small text-secondary mb-3">How are you feeling today?</label>
+                <div class="mood-selector d-flex justify-content-between flex-wrap gap-2">
+                    {% for value, text in form.fields.mood_score.choices %}
+                        <label class="mood-option text-center cursor-pointer flex-grow-1">
+                            <input type="radio" name="mood_score" value="{{ value }}" class="d-none"
+                                   {% if form.mood_score.value == value %}checked{% endif %} required>
+                            <span class="glass-card p-3 d-flex flex-column align-items-center gap-2 h-100 select-badge-card" style="border-radius: 12px; min-width: 70px;">
+                                <span class="fs-2">{{ text|slice:":2" }}</span>
+                                <span class="small text-secondary" style="font-size: 0.75rem;">{{ text|slice:"2:" }}</span>
+                            </span>
+                        </label>
+                    {% endfor %}
+                </div>
+                {% if form.mood_score.errors %}
+                    <div class="text-danger small">{{ form.mood_score.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label small text-secondary">Sleep Duration (Hours)</label>
+                    {{ form.sleep_hours }}
+                    {% if form.sleep_hours.errors %}
+                        <div class="text-danger small">{{ form.sleep_hours.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small text-secondary">Stress Level (1-10 Scale)</label>
+                    {{ form.stress_level }}
+                    <div class="d-flex justify-content-between text-muted small mt-1">
+                        <span>Relaxed</span>
+                        <span>Stressed</span>
+                    </div>
+                    {% if form.stress_level.errors %}
+                        <div class="text-danger small">{{ form.stress_level.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label small text-secondary mb-3">What activities did you perform today?</label>
+                <div class="row g-2">
+                    {% for value, text in form.fields.activities_list.choices %}
+                        <div class="col-6 col-sm-4">
+                            <label class="glass-card p-3 d-flex align-items-center gap-2 cursor-pointer h-100 select-badge-card" style="border-radius: 12px; font-size: 0.85rem;">
+                                <input type="checkbox" name="activities_list" value="{{ value }}" class="form-check-input m-0"
+                                       {% if value in form.activities_list.value %}checked{% endif %}>
+                                <span class="text-white">{{ text }}</span>
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label small text-secondary">Observations & Diary Entry</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <div class="text-danger small">{{ form.notes.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-premium w-100 py-3">
+                Save Daily Log <i class="fas fa-check-circle ms-2"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

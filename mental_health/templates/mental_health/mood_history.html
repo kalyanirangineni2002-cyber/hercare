@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <a href="{% url 'mental_health_home' %}" class="btn btn-outline-light border-0"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1 class="fw-bold mb-1">Mood Analytics & Trends</h1>
+            <p class="text-secondary mb-0">Evaluate sleep patterns, daily stress variations, and mental triggers.</p>
+        </div>
+    </div>
+
+    <!-- Analytics Board -->
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-4">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Average Mood Rating</span>
+                <h2 class="fw-bold text-gradient m-0">
+                    {% if avg_mood %}
+                        {{ avg_mood }} / 7.0
+                    {% else %}
+                        -
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Average Stress Scale</span>
+                <h2 class="fw-bold text-gradient m-0">
+                    {% if avg_stress %}
+                        {{ avg_stress }} / 10.0
+                    {% else %}
+                        -
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card">
+                <span class="small text-secondary d-block mb-1">Average Sleep Duration</span>
+                <h2 class="fw-bold text-gradient m-0">
+                    {% if avg_sleep %}
+                        {{ avg_sleep }} Hrs
+                    {% else %}
+                        -
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Charting Dashboard -->
+        <div class="col-lg-8">
+            <div class="glass-card mb-4">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-chart-line me-2"></i>Wellness Trajectory (Last 30 Logs)</h5>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="mood-stress-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Diary Journal entries -->
+            <div class="glass-card">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-book me-2"></i>Mental Health Logs & Notes</h5>
+                
+                {% if moods %}
+                    <div class="d-flex flex-column gap-3">
+                        {% for m in moods %}
+                            <div class="p-3 rounded-4" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fs-4">{{ m.mood_emoji }}</span>
+                                        <div>
+                                            <h6 class="m-0 fw-bold">{{ m.mood_label }}</h6>
+                                            <span class="small text-secondary">{{ m.date|date:"F d, Y" }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge rounded-pill bg-danger py-2 px-3 small" style="background: rgba(232,83,109,0.15) !important; color: var(--primary-color);">
+                                        Stress: {{ m.stress_level }}/10
+                                    </span>
+                                </div>
+                                
+                                {% if m.notes %}
+                                    <p class="small text-white mb-3" style="line-height: 1.5;">{{ m.notes }}</p>
+                                {% endif %}
+                                
+                                {% if m.activities %}
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for act in m.activities.split %}
+                                            <span class="badge bg-secondary rounded-pill small py-1 px-2 text-capitalize" style="background: rgba(255,255,255,0.04);">{{ act|replace:"," }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-secondary small">
+                        No logs saved.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card mb-4">
+                <h5 class="mb-3 text-gradient"><i class="fas fa-lightbulb me-2"></i>Trigger Suggestions</h5>
+                <p class="small text-secondary mb-0" style="line-height: 1.6;">
+                    High stress indicators combined with low sleep durations significantly influence hormone balance, thyroid metrics, and physical reproductive cycles. Let's aim to lock in 7-8 hours of sleep.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('mood-stress-chart');
+        if (!ctx) return;
+
+        const chartData = JSON.parse('{{ chart_data|safe|escapejs }}');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Mood Level (1-7)',
+                        data: chartData.scores,
+                        borderColor: '#9b7fd4',
+                        backgroundColor: 'rgba(155, 127, 212, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Stress Scale (1-10)',
+                        data: chartData.stress,
+                        borderColor: '#e8536d',
+                        backgroundColor: 'rgba(232, 83, 109, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#a9a7c0' }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#a9a7c0' }
+                    },
+                    y: {
+                        position: 'left',
+                        min: 1,
+                        max: 7,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#a9a7c0', stepSize: 1 }
+                    },
+                    y1: {
+                        position: 'right',
+                        min: 1,
+                        max: 10,
+                        grid: { drawOnChartArea: false },
+                        ticks: { color: '#a9a7c0', stepSize: 1 }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Dashboard Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-5 gap-3">
+        <div>
+            <h1 class="fw-bold mb-1">Hello, {{ user.first_name|default:user.username }} 👋</h1>
+            <p class="text-secondary mb-0">Here is your customized wellness overview for today.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge rounded-pill bg-danger px-3 py-2 small" style="background: rgba(232,83,109,0.15) !important; color: var(--primary-color);">
+                <i class="fas fa-calendar me-1"></i> Today: {{ today|date:"l, F d" }}
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- 1. Menstrual Cycle Prediction Widget -->
+        <div class="col-lg-6">
+            <div class="glass-card h-100 position-relative overflow-hidden">
+                <div class="position-absolute top-0 end-0 p-3" style="font-size: 5rem; color: rgba(232, 83, 109, 0.05); pointer-events: none;">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <h5 class="mb-4 text-gradient"><i class="fas fa-calendar-alt me-2"></i>Cycle Prediction</h5>
+                
+                {% if latest_cycle %}
+                    <div class="mb-4">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <span class="small text-secondary d-block mb-1">Predicted Start</span>
+                                <h3 class="fw-bold" style="color: var(--primary-color);">{{ next_period|date:"M d, Y" }}</h3>
+                            </div>
+                            <div class="col-sm-6 text-sm-end">
+                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                    {% if next_period >= today %}
+                                        In {{ next_period|subtract:today }} Days
+                                    {% else %}
+                                        Overdue
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 rounded-4 mb-4" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                        <div class="row text-center small text-secondary">
+                            <div class="col-4 border-end" style="border-color: var(--border-glass) !important;">
+                                <span class="d-block mb-1">Avg Cycle</span>
+                                <strong class="text-white fs-5">{{ latest_cycle.cycle_length|default:28 }} days</strong>
+                            </div>
+                            <div class="col-4 border-end" style="border-color: var(--border-glass) !important;">
+                                <span class="d-block mb-1">Avg Period</span>
+                                <strong class="text-white fs-5">{{ latest_cycle.period_length|default:5 }} days</strong>
+                            </div>
+                            <div class="col-4">
+                                <span class="d-block mb-1">Last Flow</span>
+                                <strong class="text-white fs-5 text-capitalize">{{ latest_cycle.flow_intensity }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-secondary mb-3">No menstrual cycles logged yet. Let's predict your next date.</p>
+                        <a href="{% url 'log_period' %}" class="btn-premium btn-sm">Log Period Info <i class="fas fa-plus ms-1"></i></a>
+                    </div>
+                {% endif %}
+                
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'tracker_home' %}" class="btn-secondary-premium btn-sm w-100 text-center">Interactive Calendar</a>
+                    {% if latest_cycle %}
+                        <a href="{% url 'log_period' %}" class="btn-premium btn-sm w-100 text-center">Log Period</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Today's Medicine Reminders -->
+        <div class="col-lg-6">
+            <div class="glass-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h5 class="m-0 text-gradient"><i class="fas fa-capsules me-2"></i>Medicine Schedule</h5>
+                    <a href="{% url 'reminders_home' %}" class="btn btn-sm btn-outline-light border-0" title="Add Reminders"><i class="fas fa-cog"></i></a>
+                </div>
+                
+                {% if todays_reminders %}
+                    <div class="reminder-list" style="max-height: 250px; overflow-y: auto;">
+                        {% for rem in todays_reminders %}
+                            <!-- Morning time slots -->
+                            {% if rem.time_morning %}
+                                <div class="reminder-item d-flex align-items-center justify-content-between p-3 rounded-4 mb-2" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);" id="reminder-{{ rem.id }}-morning">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-inline-flex p-2 rounded-3 bg-opacity-10 bg-warning text-warning" style="background: rgba(255, 193, 7, 0.1);">
+                                            <i class="fas fa-sun"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 text-white">{{ rem.medicine_name }}</h6>
+                                            <span class="small text-secondary">{{ rem.dosage }} &bull; Morning Schedule</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-success btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Taken" onclick="window.location.reload()"><i class="fas fa-check"></i></button>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Evening time slots -->
+                            {% if rem.time_evening %}
+                                <div class="reminder-item d-flex align-items-center justify-content-between p-3 rounded-4 mb-2" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);" id="reminder-{{ rem.id }}-evening">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-inline-flex p-2 rounded-3 bg-opacity-10 bg-primary text-primary" style="background: rgba(155, 127, 212, 0.1);">
+                                            <i class="fas fa-moon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 text-white">{{ rem.medicine_name }}</h6>
+                                            <span class="small text-secondary">{{ rem.dosage }} &bull; Evening Schedule</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-success btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Taken" onclick="window.location.reload()"><i class="fas fa-check"></i></button>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 my-auto">
+                        <p class="text-secondary mb-3">No active medicine alerts scheduled for today.</p>
+                        <a href="{% url 'add_reminder' %}" class="btn-premium btn-sm">Set Reminder <i class="fas fa-plus ms-1"></i></a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 3. Upcoming Clinical Appointments -->
+        <div class="col-lg-8">
+            <div class="glass-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h5 class="m-0 text-gradient"><i class="fas fa-user-md me-2"></i>Consultation Bookings</h5>
+                    <a href="{% url 'doctor_list' %}" class="btn-premium btn-sm">Book Consultation <i class="fas fa-plus ms-1"></i></a>
+                </div>
+                
+                {% if upcoming_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0" style="--bs-table-bg: transparent; --bs-table-border-color: var(--border-glass);">
+                            <thead>
+                                <tr class="text-secondary small">
+                                    <th>Doctor Name</th>
+                                    <th>Speciality</th>
+                                    <th>Schedule Date</th>
+                                    <th>Time Frame</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in upcoming_appointments %}
+                                    <tr class="border-bottom" style="border-color: var(--border-glass) !important;">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem;">Dr</div>
+                                                <span class="text-white fw-medium">Dr. {{ app.doctor.name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-secondary text-capitalize">{{ app.doctor.get_specialization_display }}</td>
+                                        <td class="text-white">{{ app.time_slot.date|date:"M d, Y" }}</td>
+                                        <td class="text-secondary">{{ app.time_slot.start_time|time:"h:i A" }}</td>
+                                        <td>
+                                            <span class="badge rounded-pill {% if app.status == 'confirmed' %}bg-success{% else %}bg-warning{% endif %} px-2 py-1 small">
+                                                {{ app.status|capitalize }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-secondary mb-3">No upcoming online doctor consultations booked.</p>
+                        <a href="{% url 'doctor_list' %}" class="btn-secondary-premium btn-sm">Browse Active Doctors</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 4. Mental Well-being Widget & Mood Status -->
+        <div class="col-lg-4">
+            <div class="glass-card h-100 d-flex flex-column">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-brain me-2"></i>Mental Well-being</h5>
+                
+                {% if latest_mood %}
+                    <div class="text-center py-3 mb-4 rounded-4" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                        <span style="font-size: 3.5rem; display: block;" class="mb-2">{{ latest_mood.mood_emoji }}</span>
+                        <h4 class="m-0">{{ latest_mood.mood_label }}</h4>
+                        <p class="small text-secondary mb-0">Logged: {{ latest_mood.date|date:"F d" }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <span class="small text-secondary d-block mb-2">Activities Today</span>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for act in latest_mood.activities.split %}
+                                <span class="badge bg-secondary rounded-pill small py-1 px-2 text-capitalize">{{ act|replace:", " }}</span>
+                            {% empty %}
+                                <span class="small text-muted">No activities logged.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 mb-4">
+                        <span style="font-size: 3.5rem; display: block;" class="mb-2">😐</span>
+                        <p class="text-secondary small">No mood logs saved for today. Let's record how you feel.</p>
+                    </div>
+                {% endif %}
+                
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'mood_history' %}" class="btn-secondary-premium btn-sm w-100 text-center">View Trends</a>
+                    <a href="{% url 'log_mood' %}" class="btn-premium btn-sm w-100 text-center">Log Mood</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
