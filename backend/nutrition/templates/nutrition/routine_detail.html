@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 750px;">
+    <!-- Back Button -->
+    <div class="d-flex align-items-center gap-3 mb-5">
+        <a href="{% url 'fitness_routines' %}" class="btn btn-outline-light border-0"><i class="fas fa-chevron-left"></i></a>
+        <div>
+            <h1 class="fw-bold mb-1">Workout Plan</h1>
+            <p class="text-secondary mb-0">Follow the instruction set below at your own pace.</p>
+        </div>
+    </div>
+
+    <!-- Workout Summary Header -->
+    <div class="glass-card mb-4" style="border-color: rgba(46, 196, 182, 0.25);">
+        <h3 class="fw-bold  mb-2">{{ routine.title }}</h3>
+        <p class="small text-secondary mb-4">{{ routine.description }}</p>
+
+        <div class="row g-3 text-center border-top pt-3" style="border-color: var(--border-glass) !important;">
+            <div class="col-3 border-end" style="border-color: var(--border-glass) !important;">
+                <span class="small text-secondary d-block">Difficulty</span>
+                <strong class=" text-capitalize">{{ routine.difficulty }}</strong>
+            </div>
+            <div class="col-3 border-end" style="border-color: var(--border-glass) !important;">
+                <span class="small text-secondary d-block">Target Area</span>
+                <strong class=" text-capitalize">{{ routine.get_target_area_display }}</strong>
+            </div>
+            <div class="col-3 border-end" style="border-color: var(--border-glass) !important;">
+                <span class="small text-secondary d-block">Duration</span>
+                <strong class="">{{ routine.duration_minutes }} Mins</strong>
+            </div>
+            <div class="col-3">
+                <span class="small text-secondary d-block">Est. Calories</span>
+                <strong class="">{{ routine.calories_burned|default:"150" }} kcal</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step-by-Step list of Exercises -->
+    <div class="glass-card">
+        <h5 class="mb-4 text-gradient"><i class="fas fa-list-ol me-2"></i>Exercise Instructions & Reps</h5>
+        
+        <div class=" small" style="line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap;">
+            {{ routine.exercises }}
+        </div>
+    </div>
+</div>
+{% endblock %}

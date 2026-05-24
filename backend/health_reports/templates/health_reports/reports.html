@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-5">
+        <div>
+            <h1 class="fw-bold mb-1">Health Reports Storage</h1>
+            <p class="text-secondary mb-0">Securely store, search, and manage blood panels, scans, vaccines, and doctor prescriptions.</p>
+        </div>
+        <a href="{% url 'upload_report' %}" class="btn-premium btn-sm"><i class="fas fa-upload me-2"></i> Upload New Report</a>
+    </div>
+
+    <!-- Searching & Filter Bar -->
+    <div class="glass-card mb-5">
+        <form method="GET" action="{% url 'reports_home' %}" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label small text-secondary">Search Reports</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--border-glass);"><i class="fas fa-search text-secondary"></i></span>
+                    <input type="text" name="q" value="{{ query }}" class="form-control border-start-0" placeholder="Search by title, doctor, or clinic...">
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <label class="form-label small text-secondary">Filter by Document Type</label>
+                <select name="type" class="form-select">
+                    <option value="">All Document Types</option>
+                    {% for code, label in types %}
+                        <option value="{{ code }}" {% if report_type == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <button type="submit" class="btn-premium w-100 py-2 btn-sm">Filter Results <i class="fas fa-filter ms-2"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Reports Grid Gallery -->
+    <div class="row g-4">
+        {% for report in reports %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card h-100 d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge text-uppercase px-2 py-1 small rounded-pill bg-opacity-10 bg-primary text-primary" style="font-size: 0.75rem; background: rgba(255,255,255,0.04);">
+                            {{ report.get_report_type_display }}
+                        </span>
+                        <span class="small text-muted">{{ report.report_date|date:"M d, Y" }}</span>
+                    </div>
+
+                    <h5 class="fw-bold  mb-2 text-truncate" title="{{ report.title }}">{{ report.title }}</h5>
+                    
+                    <div class="small text-secondary mb-4 flex-grow-1">
+                        {% if report.doctor_name %}
+                            <div class="mb-1"><i class="fas fa-user-md me-2"></i>Dr. {{ report.doctor_name }}</div>
+                        {% endif %}
+                        {% if report.hospital_clinic %}
+                            <div class="mb-1"><i class="fas fa-hospital me-2"></i>{{ report.hospital_clinic }}</div>
+                        {% endif %}
+                        <div class="mb-1 text-truncate"><i class="fas fa-file-alt me-2"></i>{{ report.file_name }}</div>
+                    </div>
+                    
+                    <hr class="mt-auto mb-3" style="border-color: var(--border-glass);">
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'report_detail' report.pk %}" class="btn-secondary-premium btn-sm w-100 text-center text-decoration-none">
+                            View Details
+                        </a>
+                        {% if report.file %}
+                            <a href="{{ report.file.url }}" download class="btn-premium btn-sm px-3" title="Download Document">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-file-medical fs-1 text-muted mb-3 d-block"></i>
+                <p class="text-secondary mb-3">No reports found matching your parameters.</p>
+                <a href="{% url 'upload_report' %}" class="btn-premium btn-sm">Upload Your First Report</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

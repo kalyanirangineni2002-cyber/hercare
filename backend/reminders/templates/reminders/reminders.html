@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-5">
+        <div>
+            <h1 class="fw-bold mb-1">Medicine Reminder Alerts</h1>
+            <p class="text-secondary mb-0">Set up custom schedules, manage dosage levels, and track daily intakes.</p>
+        </div>
+        <a href="{% url 'add_reminder' %}" class="btn-premium btn-sm"><i class="fas fa-plus me-2"></i> Set Medicine Reminder</a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Today's Schedule Logs Checklist -->
+        <div class="col-lg-7">
+            <div class="glass-card mb-4">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-calendar-check me-2"></i>Today's Medication Intake Schedule</h5>
+                
+                {% if active_reminders %}
+                    <div class="d-flex flex-column gap-3">
+                        {% for rem in active_reminders %}
+                            <!-- Morning time slot log -->
+                            {% if rem.time_morning %}
+                                {% with key=rem.id|stringformat:"s"|add:"_morning" %}
+                                <div class="reminder-item d-flex align-items-center justify-content-between p-3 rounded-4 {% if key in taken_set %}completed{% endif %}" 
+                                     id="reminder-{{ rem.id }}-morning">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-inline-flex p-2 rounded-3 bg-opacity-10 bg-warning text-warning" style="background: rgba(255, 193, 7, 0.1);">
+                                            <i class="fas fa-sun"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 ">{{ rem.medicine_name }}</h6>
+                                            <span class="small text-secondary">{{ rem.dosage }} &bull; Morning: {{ rem.time_morning|time:"h:i A" }}</span>
+                                        </div>
+                                    </div>
+                                    <button class="reminder-checkbox reminder-checkbox-btn btn-outline-success p-0 d-flex align-items-center justify-content-center" 
+                                            data-reminder-id="{{ rem.id }}" 
+                                            data-time-slot="morning"
+                                            style="width: 32px; height: 32px; border-radius: 50%;">
+                                        {% if key in taken_set %}<i class="fas fa-check"></i>{% endif %}
+                                    </button>
+                                </div>
+                                {% endwith %}
+                            {% endif %}
+
+                            <!-- Afternoon time slot log -->
+                            {% if rem.time_afternoon %}
+                                {% with key=rem.id|stringformat:"s"|add:"_afternoon" %}
+                                <div class="reminder-item d-flex align-items-center justify-content-between p-3 rounded-4 {% if key in taken_set %}completed{% endif %}" 
+                                     id="reminder-{{ rem.id }}-afternoon">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-inline-flex p-2 rounded-3 bg-opacity-10 bg-success text-success" style="background: rgba(46, 196, 182, 0.1);">
+                                            <i class="fas fa-cloud-sun"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 ">{{ rem.medicine_name }}</h6>
+                                            <span class="small text-secondary">{{ rem.dosage }} &bull; Afternoon: {{ rem.time_afternoon|time:"h:i A" }}</span>
+                                        </div>
+                                    </div>
+                                    <button class="reminder-checkbox reminder-checkbox-btn btn-outline-success p-0 d-flex align-items-center justify-content-center" 
+                                            data-reminder-id="{{ rem.id }}" 
+                                            data-time-slot="afternoon"
+                                            style="width: 32px; height: 32px; border-radius: 50%;">
+                                        {% if key in taken_set %}<i class="fas fa-check"></i>{% endif %}
+                                    </button>
+                                </div>
+                                {% endwith %}
+                            {% endif %}
+
+                            <!-- Evening time slot log -->
+                            {% if rem.time_evening %}
+                                {% with key=rem.id|stringformat:"s"|add:"_evening" %}
+                                <div class="reminder-item d-flex align-items-center justify-content-between p-3 rounded-4 {% if key in taken_set %}completed{% endif %}" 
+                                     id="reminder-{{ rem.id }}-evening">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-inline-flex p-2 rounded-3 bg-opacity-10 bg-primary text-primary" style="background: rgba(155, 127, 212, 0.1);">
+                                            <i class="fas fa-moon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 ">{{ rem.medicine_name }}</h6>
+                                            <span class="small text-secondary">{{ rem.dosage }} &bull; Evening: {{ rem.time_evening|time:"h:i A" }}</span>
+                                        </div>
+                                    </div>
+                                    <button class="reminder-checkbox reminder-checkbox-btn btn-outline-success p-0 d-flex align-items-center justify-content-center" 
+                                            data-reminder-id="{{ rem.id }}" 
+                                            data-time-slot="evening"
+                                            style="width: 32px; height: 32px; border-radius: 50%;">
+                                        {% if key in taken_set %}<i class="fas fa-check"></i>{% endif %}
+                                    </button>
+                                </div>
+                                {% endwith %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-secondary mb-3">No active medicine alerts scheduled for today.</p>
+                        <a href="{% url 'add_reminder' %}" class="btn-secondary-premium btn-sm">Set Reminder</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Master active list sideboard -->
+        <div class="col-lg-5">
+            <div class="glass-card">
+                <h5 class="mb-4 text-gradient"><i class="fas fa-prescription me-2"></i>My Medications</h5>
+                
+                {% if active_reminders or inactive_reminders %}
+                    <div class="d-flex flex-column gap-3">
+                        {% for rem in active_reminders %}
+                            <div class="p-3 rounded-4 border" style="background: rgba(255,255,255,0.01); border-color: var(--border-glass) !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="m-0 fw-bold ">{{ rem.medicine_name }}</h6>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <a href="{% url 'edit_reminder' rem.pk %}" class="btn btn-sm btn-outline-light border-0"><i class="fas fa-edit"></i></a>
+                                        <form method="POST" action="{% url 'toggle_reminder' rem.pk %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-warning border-0" title="Deactivate"><i class="fas fa-power-off"></i></button>
+                                        </form>
+                                        <form method="POST" action="{% url 'delete_reminder' rem.pk %}" class="d-inline" onsubmit="return confirm('Delete this medication reminder?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <span class="small text-secondary d-block mb-1">Dosage: {{ rem.dosage }} &bull; {{ rem.get_frequency_display }}</span>
+                                <div class="d-flex flex-wrap gap-1 mt-2">
+                                    {% for slot in rem.time_slots_display %}
+                                        <span class="badge bg-secondary rounded-pill small py-1 px-2 text-capitalize" style="background: rgba(255,255,255,0.04); font-size: 0.75rem;">{{ slot }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% for rem in inactive_reminders %}
+                            <div class="p-3 rounded-4 border opacity-50" style="background: rgba(255,255,255,0.01); border-color: var(--border-glass) !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="m-0 fw-bold  text-decoration-line-through">{{ rem.medicine_name }}</h6>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <form method="POST" action="{% url 'toggle_reminder' rem.pk %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-success border-0" title="Activate"><i class="fas fa-power-off"></i></button>
+                                        </form>
+                                        <form method="POST" action="{% url 'delete_reminder' rem.pk %}" class="d-inline" onsubmit="return confirm('Delete this medication reminder?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <span class="small text-secondary d-block mb-0">Inactive &bull; Frequency: {{ rem.get_frequency_display }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-secondary small">
+                        No medications found in records.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

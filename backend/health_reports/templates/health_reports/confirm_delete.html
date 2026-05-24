@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="glass-card shadow-lg text-center" style="max-width: 500px; border-top: 4px solid #e8536d;">
+        <div class="mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle p-4 mb-3" style="width: 80px; height: 80px; border: 2px solid rgba(232, 83, 109, 0.2);">
+                <i class="fas fa-exclamation-triangle fs-1"></i>
+            </div>
+            <h2 class="fw-bold  mb-2">Delete Health Report?</h2>
+            <p class="text-secondary small">This action is permanent and cannot be undone. The uploaded file will be deleted from our secure vault.</p>
+        </div>
+
+        <!-- Document Details preview -->
+        <div class="p-3 mb-4 rounded-3 text-start" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-glass);">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge text-uppercase px-2 py-1 small rounded-pill bg-opacity-10 bg-primary text-primary" style="font-size: 0.75rem; background: rgba(255,255,255,0.04);">
+                    {{ report.get_report_type_display }}
+                </span>
+                <span class="small text-muted">{{ report.report_date|date:"M d, Y" }}</span>
+            </div>
+            <h6 class="fw-bold  mb-1 text-truncate">{{ report.title }}</h6>
+            {% if report.doctor_name %}
+                <div class="small text-secondary"><i class="fas fa-user-md me-2"></i>Dr. {{ report.doctor_name }}</div>
+            {% endif %}
+            <div class="small text-muted text-truncate mt-1" style="font-size: 0.75rem;"><i class="fas fa-file-alt me-1"></i> {{ report.file_name }}</div>
+        </div>
+
+        <!-- Form and Action Buttons -->
+        <form method="POST" action="{% url 'delete_report' report.pk %}">
+            {% csrf_token %}
+            <div class="d-flex gap-3">
+                <a href="{% url 'report_detail' report.pk %}" class="btn-secondary-premium w-100 py-2.5">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-danger w-100 py-2.5" style="border-radius: 30px; font-family: var(--font-heading); font-weight: 600;">
+                    Confirm Delete <i class="fas fa-trash-alt ms-1"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
