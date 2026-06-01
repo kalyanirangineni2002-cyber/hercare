@@ -56,12 +56,13 @@ def log_mood(request):
 def mood_history(request):
     """View mood history with trends."""
     moods = MoodLog.objects.filter(user=request.user).order_by('date')
+    recent_moods=moods.order_by('date')[:30]
     
     # Prepare chart data
     chart_data = {
-        'labels': [m.date.strftime('%b %d') for m in moods[-30:]],
-        'scores': [m.mood_score for m in moods[-30:]],
-        'stress': [m.stress_level for m in moods[-30:]],
+        'labels': [m.date.strftime('%b %d') for m in recent_moods],
+        'scores': [m.mood_score for m in recent_moods],
+        'stress': [m.stress_level for m in recent_moods],
     }
     
     # Calculate averages
