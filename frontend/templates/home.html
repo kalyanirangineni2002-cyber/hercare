@@ -246,7 +246,12 @@
 
     <!-- Footer -->
     <footer class="py-4 border-top text-center text-muted" style="border-color: var(--border-glass) !important;">
-        <p class="small mb-0">&copy; 2026 HER CARE+. All Rights Reserved.</p>
+        <p class="small mb-2">&copy; 2026 HER CARE+. All Rights Reserved.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'terms' %}" class="small text-decoration-none" style="color: var(--text-muted); transition: color 0.3s ease;" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-muted)'">Terms & Conditions</a>
+            <span class="text-secondary small">&bull;</span>
+            <a href="{% url 'privacy' %}" class="small text-decoration-none" style="color: var(--text-muted); transition: color 0.3s ease;" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
+        </div>
     </footer>
 </div>
 {% endblock %}

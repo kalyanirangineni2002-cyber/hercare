@@ -76,3 +76,8 @@ def profile_view(request):
         'profile_form': profile_form,
     }
     return render(request, 'accounts/profile.html', context)
+def terms_view(request):
+    return render(request,'accounts/terms.html')
+
+def privacy_view(request):
+    return render(request,'accounts/privacy.html')
