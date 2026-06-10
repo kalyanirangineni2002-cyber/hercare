@@ -48,6 +48,18 @@
                 {% endif %}
             </div>
 
+            <div class="mb-4">
+                <label class="form-label small text-secondary">AI Summary Translation Language</label>
+                {{ form.summary_language }}
+                {% if form.summary_language.errors %}
+                    <div class="text-danger small">{{ form.summary_language.errors.0 }}</div>
+                {% endif %}
+                <div class="form-text text-muted" style="font-size: 0.8rem; opacity: 0.7;">
+                    Choose the language in which Google Gemini AI will analyze and explain your report.
+                </div>
+            </div>
+
+
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <label class="form-label small text-secondary">Consultant Doctor (Optional)</label>

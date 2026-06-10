@@ -125,5 +125,58 @@
             </div>
         </div>
     </div>
+
+    {% if report.ai_summary %}
+    <!-- AI Analysis Section -->
+    <div class="row g-4 mt-4">
+        <div class="col-12">
+            <div class="glass-card shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--primary-color);">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="btn-premium p-2 d-inline-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border-radius: 12px; box-shadow: none; background: linear-gradient(135deg, #8A2387, #E94057);">
+                            <i class="fas fa-brain" style="font-size: 1.2rem; color: #fff;"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1 m-0">AI Smart Analysis</h4>
+                            <p class="text-secondary small mb-0">Powered by Google Gemini AI</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="badge text-uppercase px-3 py-2 small rounded-pill bg-dark text-light border border-secondary">
+                            <i class="fas fa-language me-1"></i> {{ report.get_summary_language_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Simple Explanation Column -->
+                    <div class="col-md-7">
+                        <h5 class="fw-semibold mb-3 text-primary"><i class="fas fa-comment-medical me-2"></i> Simple Explanation</h5>
+                        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border-glass); min-height: 180px;">
+                            <p class="mb-0 small text-secondary" style="line-height: 1.6; white-space: pre-line;">{{ report.ai_summary }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Abnormal Findings / Key Values Column -->
+                    <div class="col-md-5">
+                        <h5 class="fw-semibold mb-3 text-warning"><i class="fas fa-exclamation-triangle me-2"></i> Key Values & Findings</h5>
+                        <div class="p-3 rounded-3" style="background: rgba(255, 193, 7, 0.03); border: 1px solid rgba(255, 193, 7, 0.15); min-height: 180px;">
+                            <div class="small text-secondary" style="line-height: 1.6; white-space: pre-line;">{{ report.ai_abnormal_findings }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Disclaimer -->
+                <div class="mt-4 p-3 rounded-3 d-flex align-items-center gap-3" style="background: rgba(220, 53, 69, 0.05); border: 1px solid rgba(220, 53, 69, 0.15);">
+                    <i class="fas fa-heartbeat text-danger" style="font-size: 1.5rem;"></i>
+                    <p class="mb-0 small text-danger fw-semibold">
+                        Disclaimer: This is an AI-generated summary and not a medical diagnosis. Please consult a qualified healthcare professional for medical advice.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
+
