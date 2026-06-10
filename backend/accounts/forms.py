@@ -15,6 +15,7 @@ class UserRegistrationForm(UserCreationForm):
     last_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={
         'class': 'form-control', 'placeholder': 'Last name'
     }))
+<<<<<<< HEAD
     agree_to_terms = forms.BooleanField(
         required=True,
         widget=forms.CheckboxInput(attrs={
@@ -23,6 +24,16 @@ class UserRegistrationForm(UserCreationForm):
         }),
         error_messages={
             'required': 'You must agree to the Terms and Conditions and Privacy Policy to register.'
+=======
+    agree_to_terms=forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={
+            'class':'form-check-input',
+            'id':'agree_to_terms_checkbox'
+        }),
+        error_messages={
+            'required':'You must agree to terms and conditions and Privacy Policy to register.'
+>>>>>>> d7044ddf2cf7550a3942b7f0a2371ac5288cd461
         }
     )
     

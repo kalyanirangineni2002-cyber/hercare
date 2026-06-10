@@ -76,6 +76,7 @@ def profile_view(request):
         'profile_form': profile_form,
     }
     return render(request, 'accounts/profile.html', context)
+<<<<<<< HEAD
 
 
 def terms_view(request):
@@ -86,3 +87,10 @@ def terms_view(request):
 def privacy_view(request):
     """Render the Privacy Policy page."""
     return render(request, 'accounts/privacy.html')
+=======
+def terms_view(request):
+    return render(request,'accounts/terms.html')
+
+def privacy_view(request):
+    return render(request,'accounts/privacy.html')
+>>>>>>> d7044ddf2cf7550a3942b7f0a2371ac5288cd461
