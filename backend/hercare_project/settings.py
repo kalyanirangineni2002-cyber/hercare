@@ -113,3 +113,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Frame Options (allowing PDF preview in iframe)
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Google Gemini API Key
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+
+

@@ -5,7 +5,7 @@ class HealthReportForm(forms.ModelForm):
     """Form to upload and describe health reports."""
     class Meta:
         model = HealthReport
-        fields = ['title', 'report_type', 'file', 'report_date', 'doctor_name', 'hospital_clinic', 'notes']
+        fields = ['title', 'report_type', 'file', 'report_date', 'doctor_name', 'hospital_clinic', 'notes', 'summary_language']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Annual Blood Panel 2026'}),
             'report_type': forms.Select(attrs={'class': 'form-select'}),
@@ -14,4 +14,6 @@ class HealthReportForm(forms.ModelForm):
             'doctor_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dr. Name (Optional)'}),
             'hospital_clinic': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Clinic/Hospital Name (Optional)'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Summarize findings or doctors instructions...'}),
+            'summary_language': forms.Select(attrs={'class': 'form-select'}),
         }
+

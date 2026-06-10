@@ -3,3 +3,4 @@ mysqlclient==2.2.7
 Pillow==11.1.0
 django-crispy-forms==2.3
 crispy-bootstrap5==2024.10
+google-genai

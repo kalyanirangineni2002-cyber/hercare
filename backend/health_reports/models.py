@@ -23,7 +23,25 @@ class HealthReport(models.Model):
     doctor_name = models.CharField(max_length=150, blank=True, help_text="Prescribing or consulting doctor")
     hospital_clinic = models.CharField(max_length=200, blank=True, help_text="Hospital or diagnostic clinic")
     notes = models.TextField(blank=True, help_text="Brief notes or diagnosis summary")
+    
+    # AI Summary Fields
+    LANGUAGE_CHOICES = [
+        ('en', 'English'),
+        ('te', 'Telugu (తెలుగు)'),
+        ('hi', 'Hindi (हिन्दी)'),
+        ('ta', 'Tamil (தமிழ்)'),
+    ]
+    summary_language = models.CharField(
+        max_length=10,
+        choices=LANGUAGE_CHOICES,
+        default='en',
+        help_text="Language for the AI-generated summary"
+    )
+    ai_summary = models.TextField(blank=True, null=True, help_text="AI-generated simple explanation of the report")
+    ai_abnormal_findings = models.TextField(blank=True, null=True, help_text="Highlighted abnormal findings and key values")
+    
     created_at = models.DateTimeField(auto_now_add=True)
+
     
     def __str__(self):
         return f"{self.title} - {self.user.username} ({self.get_report_type_display()})"
